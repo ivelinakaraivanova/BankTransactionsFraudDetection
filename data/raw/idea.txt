@@ -1,0 +1,120 @@
+избираме Bank Transactions dataset и започваме истински, професионален data engineering проект с реални данни, разработен локално във VS Code, точно както се прави в компаниите.
+
+
+💼 Какво ще представлява проектът
+Ще изградим пълен ETL pipeline върху реални банкови транзакции:
+
+Bronze layer → raw данни (CSV)
+
+Silver layer → почистени и валидирани данни (Parquet)
+
+Gold layer → агрегирани таблици (Parquet)
+
+Data Quality checks → автоматични проверки
+
+Документация → README + DQ отчет
+
+
+
+
+📥 1) Откъде да вземеш реалния Bank Transactions dataset
+Най‑подходящият е:
+
+Kaggle – “Credit Card Fraud Detection” dataset  
+(реални транзакции, анонимизирани, с fraud флагове)
+
+
+
+
+🧱 2) Проектна структура във VS Code (финална)
+
+Code
+real_bank_transactions/
+│
+├── data/
+│   ├── raw/
+│   │   └── bank_transactions.csv
+│   ├── bronze/
+│   ├── silver/
+│   ├── gold/
+│   └── dq_reports/
+│
+├── src/
+│   ├── etl_bronze.py
+│   ├── etl_silver.py
+│   ├── etl_gold.py
+│   ├── dq_checks.py
+│   └── utils.py
+│
+├── notebooks/
+│   └── exploration.ipynb
+│
+└── README.md
+
+
+🧠 3) Какво ще прави всеки слой
+Bronze
+Чете raw CSV от Kaggle
+
+Записва го в Parquet без промени
+
+Silver
+Почистване:
+
+премахване на NULL
+
+премахване на дубликати
+
+корекция на типове
+
+нормализация на amount
+
+Data Quality checks
+
+Запис в Parquet
+
+Gold
+Агрегирани таблици:
+
+total amount per day
+
+fraud rate per day
+
+average transaction amount
+
+customer-level summaries
+
+🧪 4) Data Quality Checks (автоматични)
+В dq_checks.py ще имаш:
+
+Missing values
+
+Duplicate rows
+
+Invalid values (amount ≤ 0)
+
+Schema validation
+
+Business rules
+
+Fraud anomaly checks
+
+И ще генерираме:
+
+dq_summary.parquet
+
+dq_report.md
+
+dq_report.json
+
+
+
+Python файлове за:
+
+etl_bronze.py
+
+etl_silver.py
+
+etl_gold.py
+
+dq_checks.py

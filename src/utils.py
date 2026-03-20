@@ -30,6 +30,7 @@ DQ_PATH = os.path.join(BASE_DIR, 'data', 'dq_reports')
 
 RAW_FILE = os.path.join(RAW_PATH, "creditcard.csv")
 BRONZE_FILE = os.path.join(BRONZE_PATH, "transactions.parquet")
+SILVER_FILE = os.path.join(SILVER_PATH, "transactions.parquet")
 
 def create_spark_session(app_name="RealBankTransactions"):
     '''Create and return a SparkSession'''
@@ -44,3 +45,26 @@ def create_spark_session(app_name="RealBankTransactions"):
         .getOrCreate()
     return spark
 
+
+def read_csv(spark, path):
+    '''Read a CSV file into a Spark DataFrame'''
+    return spark.read.csv(path, header=True, inferSchema=True)
+
+
+def read_parquet(spark, path):
+    '''Read a Parquet file into a Spark DataFrame'''
+    return spark.read.parquet(path)
+
+
+def write_parquet(df, path):
+    '''Write a Spark DataFrame to Parquet format'''
+    df.write.mode("overwrite").parquet(path)
+
+
+def print_step(message):
+    print(f"[STEP] {message}")
+
+
+def print_success(message):
+    print(f"[SUCCESS] {message}")
+    

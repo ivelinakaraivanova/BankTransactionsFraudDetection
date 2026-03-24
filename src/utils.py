@@ -31,6 +31,18 @@ DQ_PATH = os.path.join(BASE_DIR, 'data', 'dq_reports')
 RAW_FILE = os.path.join(RAW_PATH, "creditcard.csv")
 BRONZE_FILE = os.path.join(BRONZE_PATH, "transactions.parquet")
 SILVER_FILE = os.path.join(SILVER_PATH, "transactions.parquet")
+GOLD_FRAUD_STATS = os.path.join(GOLD_PATH, "fraud_stats.parquet")
+GOLD_FRAUD_HOURLY = os.path.join(GOLD_PATH, "fraud_hourly.parquet")
+GOLD_FRAUD_AMOUNT_BUCKETS = os.path.join(GOLD_PATH, "fraud_amount_buckets.parquet")
+GOLD_AMOUNT_DIST = os.path.join(GOLD_PATH, "amount_dist.parquet")
+GOLD_AMOUNT_DIST_BY_CLASS = os.path.join(GOLD_PATH, "amount_dist_by_class.parquet")
+NULL_REPORT_FILE = os.path.join(DQ_PATH, "null_report.csv")
+DUPLICATE_REPORT_FILE = os.path.join(DQ_PATH, "duplicate_report.csv")
+RANGE_REPORT_FILE = os.path.join(DQ_PATH, "range_report.csv")
+SCHEMA_REPORT_FILE = os.path.join(DQ_PATH, "schema_report.csv")
+INVALID_CLASS_REPORT_FILE = os.path.join(DQ_PATH, "invalid_class_report.csv")
+OUTLIER_REPORT_FILE = os.path.join(DQ_PATH, "outlier_report.csv")
+
 
 def create_spark_session(app_name="RealBankTransactions"):
     '''Create and return a SparkSession'''
@@ -49,6 +61,11 @@ def create_spark_session(app_name="RealBankTransactions"):
 def read_csv(spark, path):
     '''Read a CSV file into a Spark DataFrame'''
     return spark.read.csv(path, header=True, inferSchema=True)
+
+
+def write_csv(df, path):
+    '''Write a Spark DataFrame to CSV format'''
+    df.write.mode("overwrite").option("header", "true").csv(path)
 
 
 def read_parquet(spark, path):

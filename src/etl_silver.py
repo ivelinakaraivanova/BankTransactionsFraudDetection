@@ -59,6 +59,13 @@ def run():
     print("Data types after casting:")
     df.printSchema()
 
+    # Remove Amount outliers (outside 1st–99th percentile)
+    print("Removing outliers from Amount column…")
+    quantiles = df.approxQuantile("Amount", [0.01, 0.99], 0.01)
+    p01, p99 = quantiles
+    df = df.filter((F.col("Amount") >= p01) & (F.col("Amount") <= p99))
+    print(f"Outliers removed. Records after outlier removal: {df.count()}")
+    
     # Remove bronze metadata columns
     print_step("Removing Bronze metadata columns…")
     df = df.drop("ingestion_timestamp", "source_file")

@@ -107,6 +107,8 @@ def run():
     # Amount distribution statistics
     print_step("Calculating amount distribution statistics…")
     amount_stats = df.agg(*amount_statistics())
+    amount_stats = amount_stats.withColumn("Class", F.lit("ALL")) \
+                                .select("Class", *amount_stats.columns)
 
     amount_stats.show()
 

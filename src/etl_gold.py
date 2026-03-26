@@ -17,6 +17,7 @@ def fraud_aggregations():
         F.avg(F.when(F.col("Class") == 0, F.col("Amount"))).alias("avg_nonfraud_amount")
     ]
 
+
 def amount_statistics():
     return [
         F.min("Amount").alias("min_amount"),
@@ -28,6 +29,22 @@ def amount_statistics():
         F.expr("percentile_approx(Amount, 0.75)").alias("p75_amount"),
         F.expr("percentile_approx(Amount, 0.95)").alias("p95_amount")
     ]
+
+
+def add_hour_column(df):
+    return df.withColumn("hour", (F.col("Time") / 3600).cast("int"))
+
+
+def add_amount_bucket_column(df):
+    return df.withColumn(
+        "amount_bucket",
+        F.when(F.col("Amount") < 10, "0-10")
+        .when((F.col("Amount") >= 10) & (F.col("Amount") < 50), "10-50")
+        .when((F.col("Amount") >= 50) & (F.col("Amount") < 100), "50-100")
+        .when((F.col("Amount") >= 100) & (F.col("Amount") < 500), "100-500")
+        .when((F.col("Amount") >= 500) & (F.col("Amount") < 1000), "500-1000")
+        .otherwise("1000+")
+    )
 
 def run():
 
@@ -54,7 +71,7 @@ def run():
     # Hourly Fraud Analysis
     print_step("Calculating hourly fraud analysis…")
 
-    df = df.withColumn("hour", (F.col("Time") / 3600).cast("int"))
+    df = add_hour_column(df)
 
     hourly_fraud = (
         df.groupBy("hour")
@@ -72,15 +89,7 @@ def run():
 
     print_step("Creating amount buckets…")
 
-    df = df.withColumn(
-        "amount_bucket",
-        F.when(F.col("Amount") < 10, "0-10")
-        .when((F.col("Amount") >= 10) & (F.col("Amount") < 50), "10-50")
-        .when((F.col("Amount") >= 50) & (F.col("Amount") < 100), "50-100")
-        .when((F.col("Amount") >= 100) & (F.col("Amount") < 500), "100-500")
-        .when((F.col("Amount") >= 500) & (F.col("Amount") < 1000), "500-1000")
-        .otherwise("1000+")
-    )
+    df = add_amount_bucket_column(df)
 
     print_step("Calculating fraud rate by amount buckets…")
 
@@ -88,7 +97,7 @@ def run():
         df.groupBy("amount_bucket")
         .agg(*fraud_aggregations())
         .orderBy("amount_bucket")
-   )
+    )
 
     amount_buckets.show()
 
@@ -96,7 +105,7 @@ def run():
     print_success("Amount buckets fraud analysis saved.")
 
     # Amount distribution statistics
-    print_step("Calculating amount statistics…")
+    print_step("Calculating amount distribution statistics…")
     amount_stats = df.agg(*amount_statistics())
 
     amount_stats.show()

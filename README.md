@@ -39,7 +39,7 @@ src/
 2. Run via Docker:
    ```bash
    docker run -v "$(pwd):/home/jovyan/work" jupyter/pyspark-notebook:latest \
-     bash -c "cd /home/jovyan/work/src && python etl_bronze.py && python etl_silver.py && python etl_gold.py && python dq_checks.py"
+     bash -c "cd /home/jovyan/work/src && python etl_bronze.py && python dq_checks.py && python etl_silver.py && python etl_gold.py"
    ```
 
 ## Dataset

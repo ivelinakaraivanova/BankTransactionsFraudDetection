@@ -44,6 +44,14 @@ def add_amount_bucket_column(df):
         .when((F.col("Amount") >= 100) & (F.col("Amount") < 500), "100-500")
         .when((F.col("Amount") >= 500) & (F.col("Amount") < 1000), "500-1000")
         .otherwise("1000+")
+    ).withColumn(
+        "bucket_order",
+        F.when(F.col("amount_bucket") == "0-10", 1)
+        .when(F.col("amount_bucket") == "10-50", 2)
+        .when(F.col("amount_bucket") == "50-100", 3)
+        .when(F.col("amount_bucket") == "100-500", 4)
+        .when(F.col("amount_bucket") == "500-1000", 5)
+        .when(F.col("amount_bucket") == "1000+", 6)
     )
 
 def run():
@@ -94,9 +102,9 @@ def run():
     print_step("Calculating fraud rate by amount buckets…")
 
     amount_buckets = (
-        df.groupBy("amount_bucket")
+        df.groupBy("amount_bucket", "bucket_order")
         .agg(*fraud_aggregations())
-        .orderBy("amount_bucket")
+        .orderBy("bucket_order")
     )
 
     amount_buckets.show()

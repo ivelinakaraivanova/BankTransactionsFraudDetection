@@ -1,4 +1,4 @@
-from utils import BRONZE_FILE, DQ_PATH, DUPLICATE_REPORT_FILE, INVALID_CLASS_REPORT_FILE, NULL_REPORT_FILE, OUTLIER_REPORT_FILE, RANGE_REPORT_FILE, SCHEMA_REPORT_FILE, create_spark_session, print_step, print_success, read_parquet, write_csv
+from utils import DQ_PATH, DUPLICATE_REPORT_FILE, INVALID_CLASS_REPORT_FILE, NULL_REPORT_FILE, OUTLIER_REPORT_FILE, RANGE_REPORT_FILE, SCHEMA_REPORT_FILE, SILVER_FILE, create_spark_session, print_step, print_success, read_parquet, write_csv
 from pyspark.sql import functions as F
 
 
@@ -81,9 +81,9 @@ def check_outliers(df, spark):
 def run():
 
     spark = create_spark_session("DQ_Checks")
-    df = read_parquet(spark, BRONZE_FILE)
+    df = read_parquet(spark, SILVER_FILE)
 
-    print("Running data quality checks on Bronze layer…")
+    print("Running data quality checks on Silver layer…")
 
     print_step("Checking for NULL values…")
     null_report = check_nulls(df, spark)

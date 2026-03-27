@@ -1,20 +1,3 @@
-''' 
-TODO
-
-1. create_spark_session()
-2. read_csv(path)
-3. read_parquet(path)
-4. write_parquet(df, path)
-5. print_step(message)
-6. print_success(message)
-7. compare_schema(df, expected_schema)
-8. check_missing(df)
-9. check_duplicates(df)
-10. check_invalid_amount(df)
-11. get_current_timestamp()
-12. add_ingestion_timestamp(df)
-'''
-
 import os
 from pyspark.sql import SparkSession
 

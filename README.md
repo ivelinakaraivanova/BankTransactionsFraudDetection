@@ -29,7 +29,7 @@ src/
 | **Bronze** | `creditcard.csv` | `transactions.parquet` | Add ingestion metadata, no transformations |
 | **Silver** | Bronze Parquet | `transactions.parquet` | Remove nulls, duplicates & outliers; cast types; add processing timestamp |
 | **Gold** | Silver Parquet | 5 analytical Parquets | Fraud stats, hourly fraud rates, amount buckets, amount distribution |
-| **DQ** | Bronze Parquet | 6 CSV reports | Null counts, duplicates, schema validation, range checks, invalid classes, outliers |
+| **DQ** | Silver Parquet | 6 CSV reports | Null counts, duplicates, schema validation, range checks, invalid classes, outliers |
 
 ## Setup
 
@@ -39,7 +39,7 @@ src/
 2. Run via Docker:
    ```bash
    docker run -v "$(pwd):/home/jovyan/work" jupyter/pyspark-notebook:latest \
-     bash -c "cd /home/jovyan/work/src && python etl_bronze.py && python dq_checks.py && python etl_silver.py && python etl_gold.py"
+     bash -c "cd /home/jovyan/work/src && python etl_bronze.py && python etl_silver.py && python dq_checks.py && python etl_gold.py"
    ```
 
 ## Dataset
